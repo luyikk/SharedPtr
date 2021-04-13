@@ -3,7 +3,7 @@ use std::ops::{Deref, DerefMut};
 use std::sync::{Arc,Weak};
 
 
-
+#[derive(Debug)]
 pub struct SharedPtr<T:?Sized>{
     rc:MaybeUninit<Arc<T>>
 }

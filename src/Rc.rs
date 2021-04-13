@@ -2,7 +2,7 @@ use std::mem::MaybeUninit;
 use std::ops::{Deref, DerefMut};
 use std::rc::{Rc, Weak};
 
-
+#[derive(Debug)]
 pub struct SharedPtr<T:?Sized>{
     rc:MaybeUninit<Rc<T>>
 }
