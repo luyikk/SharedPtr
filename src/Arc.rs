@@ -75,6 +75,7 @@ impl <T:?Sized> SharedPtr<T>{
             None
         }
     }
+    ///# Safety
     #[inline]
     pub unsafe fn get_mut_ref(&self)->&mut T {
         &mut *(self.as_ref() as *const T as *mut T)
