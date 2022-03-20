@@ -1,5 +1,3 @@
-
-
 struct Foo(String);
 
 fn main() {

@@ -4,22 +4,21 @@
 #![feature(dispatch_from_dyn)]
 #![allow(non_snake_case)]
 
-pub mod Rc;
 pub mod Arc;
+pub mod Rc;
 
-
-pub trait ISetNullWeak{
+pub trait ISetNullWeak {
     fn set_null(&mut self);
 }
 
-impl <T> ISetNullWeak for std::rc::Weak<T>{
+impl<T> ISetNullWeak for std::rc::Weak<T> {
     fn set_null(&mut self) {
-        *self=Default::default();
+        *self = Default::default();
     }
 }
 
-impl <T> ISetNullWeak for std::sync::Weak<T>{
+impl<T> ISetNullWeak for std::sync::Weak<T> {
     fn set_null(&mut self) {
-        *self=Default::default();
+        *self = Default::default();
     }
 }
