@@ -1,8 +1,5 @@
-#![feature(maybe_uninit_extra)]
-#![feature(maybe_uninit_ref)]
-#![feature(unsize)]
-#![feature(dispatch_from_dyn)]
 #![allow(non_snake_case)]
+#![forbid(unsafe_code)]
 
 pub mod Arc;
 pub mod Rc;
