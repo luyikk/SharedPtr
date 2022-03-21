@@ -39,6 +39,12 @@ impl<T: ?Sized> SharedPtr<T> {
     pub fn weak(&self) -> Option<Weak<T>> {
         self.rc.as_ref().map(Arc::downgrade)
     }
+
+    #[inline]
+    pub fn get_mut(&mut self) -> &mut T {
+        Arc::get_mut(&mut *self).expect("shared get_mut_ref")
+    }
+
     ///# Safety
     /// Arc::get_mut Too strict, resulting in limited function,
     /// we need an unsafe way to be consistent with the SharedPtr
