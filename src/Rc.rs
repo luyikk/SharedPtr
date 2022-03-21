@@ -43,7 +43,7 @@ impl<T: ?Sized> SharedPtr<T> {
     }
     #[inline]
     pub fn get_mut(&mut self) -> &mut T {
-        Rc::get_mut(&mut *self).expect("shared get_mut_ref")
+        Rc::get_mut(&mut *self).expect("no unique")
     }
     ///# Safety
     /// Rc::get_mut Too strict, resulting in limited function,
