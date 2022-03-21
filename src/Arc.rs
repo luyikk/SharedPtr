@@ -1,4 +1,5 @@
 use std::ops::{Deref, DerefMut};
+use std::rc::Rc;
 use std::sync::{Arc, Weak};
 
 #[derive(Debug)]
@@ -39,9 +40,13 @@ impl<T: ?Sized> SharedPtr<T> {
     pub fn weak(&self) -> Option<Weak<T>> {
         self.rc.as_ref().map(Arc::downgrade)
     }
+    ///# Safety
+    /// Arc::get_mut Too strict, resulting in limited function,
+    /// we need an unsafe way to be consistent with the SharedPtr
     #[inline]
-    pub fn get_mut_ref(&mut self) -> &mut T {
-        Arc::get_mut(&mut *self).expect("shared get_mut_ref")
+    pub unsafe fn get_mut_ref(&self) -> &mut T {
+        Rc::get_mut()
+        &mut *(self.as_ref() as *const T as *mut T)
     }
 }
 

@@ -1,5 +1,5 @@
 #![allow(non_snake_case)]
-#![forbid(unsafe_code)]
+
 
 pub mod Arc;
 pub mod Rc;

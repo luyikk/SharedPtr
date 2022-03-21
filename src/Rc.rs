@@ -41,9 +41,12 @@ impl<T: ?Sized> SharedPtr<T> {
     pub fn is_null(&self) -> bool {
         self.rc.is_none()
     }
+    ///# Safety
+    /// Rc::get_mut Too strict, resulting in limited function,
+    /// we need an unsafe way to be consistent with the SharedPtr
     #[inline]
-    pub fn get_mut_ref(&mut self) -> &mut T {
-        Rc::get_mut(&mut *self).expect("shared get_mut_ref")
+    pub unsafe fn get_mut_ref(&self) -> &mut T {
+        &mut *(self.as_ref() as *const T as *mut T)
     }
 }
 
