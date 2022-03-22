@@ -2,6 +2,7 @@
 
 pub mod Arc;
 pub mod Rc;
+pub mod unsafe_def;
 
 pub trait ISetNullWeak {
     fn set_null(&mut self);
@@ -18,3 +19,4 @@ impl<T> ISetNullWeak for std::sync::Weak<T> {
         *self = Default::default();
     }
 }
+

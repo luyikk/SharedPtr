@@ -39,17 +39,12 @@ impl<T: ?Sized> SharedPtr<T> {
     pub fn weak(&self) -> Option<Weak<T>> {
         self.rc.as_ref().map(Arc::downgrade)
     }
+    /// if ptr is no unique,none will be returned, or Some(&mut T) be returned.
     #[inline]
-    pub fn get_mut(&mut self) -> &mut T {
-        Arc::get_mut(&mut *self).expect("no unique")
+    pub fn get_mut(&mut self) -> Option<&mut T> {
+        Arc::get_mut(&mut *self)
     }
-    ///# Safety
-    /// Arc::get_mut Too strict, resulting in limited function,
-    /// we need an unsafe way to be consistent with the SharedPtr
-    #[inline]
-    pub unsafe fn get_mut_ref(&self) -> &mut T {
-        &mut *(self.as_ref() as *const T as *mut T)
-    }
+
 }
 
 impl<T: ?Sized> Deref for SharedPtr<T> {

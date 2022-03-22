@@ -41,16 +41,11 @@ impl<T: ?Sized> SharedPtr<T> {
     pub fn is_null(&self) -> bool {
         self.rc.is_none()
     }
+
+    /// if ptr is no unique,none will be returned, or Some(&mut T) be returned.
     #[inline]
-    pub fn get_mut(&mut self) -> &mut T {
-        Rc::get_mut(&mut *self).expect("no unique")
-    }
-    ///# Safety
-    /// Rc::get_mut Too strict, resulting in limited function,
-    /// we need an unsafe way to be consistent with the SharedPtr
-    #[inline]
-    pub unsafe fn get_mut_ref(&self) -> &mut T {
-        &mut *(self.as_ref() as *const T as *mut T)
+    pub fn get_mut(&mut self) -> Option<&mut T> {
+        Rc::get_mut(&mut *self)
     }
 }
 
