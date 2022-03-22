@@ -1,6 +1,6 @@
 [package]
 name = "sharedptr"
-version = "0.3.1"
+version = "0.3.2"
 authors = ["yi lu <luyikk@126.com>"]
 edition = "2018"
 repository = "https://github.com/luyikk/SharedPtr"
