@@ -22,22 +22,6 @@ impl<T> SharedPtr<T> {
         self.rc
     }
 
-    #[inline]
-    pub fn into_inner(mut self)->Result<T,Self>{
-        if let Some(ref mut rc)=self.rc{
-            // check unique
-            if Arc::get_mut(rc ).is_some(){
-                let ptr= Arc::into_raw(self.rc.take().unwrap());
-                unsafe {
-                    Ok(ptr.read())
-                }
-            }else{
-                Err(self)
-            }
-        }else{
-            Err(self)
-        }
-    }
 }
 impl<T: ?Sized> SharedPtr<T> {
     #[inline]
@@ -70,17 +54,9 @@ impl<T: ?Sized> SharedPtr<T> {
 
 impl <T:Clone> SharedPtr<T> {
     #[inline]
-    pub fn into_or_clone_inner(mut self)->Option<T>{
-        if let Some(ref mut rc)=self.rc{
-            // check unique
-            if Arc::get_mut(rc ).is_some(){
-                let ptr= Arc::into_raw(self.rc.take().unwrap());
-                unsafe {
-                    Some(ptr.read())
-                }
-            }else{
-                Some(rc.as_ref().clone())
-            }
+    pub fn clone_inner(mut self)->Option<T>{
+        if let Some(ref mut rc)=self.rc {
+            Some(rc.as_ref().clone())
         }else{
             None
         }
