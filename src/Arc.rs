@@ -21,6 +21,23 @@ impl<T> SharedPtr<T> {
     pub fn assume_init(self) -> Option<Arc<T>> {
         self.rc
     }
+
+    #[inline]
+    pub fn into_inner(mut self)->Result<T,Self>{
+        if let Some(ref mut rc)=self.rc{
+            // check unique
+            if Arc::get_mut(rc ).is_some(){
+                let ptr= Arc::into_raw(self.rc.take().unwrap());
+                unsafe {
+                    Ok(ptr.read())
+                }
+            }else{
+                Err(self)
+            }
+        }else{
+            Err(self)
+        }
+    }
 }
 impl<T: ?Sized> SharedPtr<T> {
     #[inline]
@@ -42,9 +59,32 @@ impl<T: ?Sized> SharedPtr<T> {
     /// if ptr is no unique,none will be returned, or Some(&mut T) be returned.
     #[inline]
     pub fn get_mut(&mut self) -> Option<&mut T> {
-        Arc::get_mut(&mut *self)
+        if let Some(ref mut rc)=self.rc {
+            Arc::get_mut(rc)
+        }else{
+            None
+        }
     }
 
+}
+
+impl <T:Clone> SharedPtr<T> {
+    #[inline]
+    pub fn into_or_clone_inner(mut self)->Option<T>{
+        if let Some(ref mut rc)=self.rc{
+            // check unique
+            if Arc::get_mut(rc ).is_some(){
+                let ptr= Arc::into_raw(self.rc.take().unwrap());
+                unsafe {
+                    Some(ptr.read())
+                }
+            }else{
+                Some(rc.as_ref().clone())
+            }
+        }else{
+            None
+        }
+    }
 }
 
 impl<T: ?Sized> Deref for SharedPtr<T> {

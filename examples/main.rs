@@ -1,4 +1,12 @@
+
+#[derive(Clone)]
 struct Foo(String);
+
+impl Drop for Foo {
+    fn drop(&mut self) {
+        println!("drop :{}",self.0);
+    }
+}
 
 fn main() {
     {
@@ -73,6 +81,45 @@ fn main() {
 
         if wk.upgrade().is_none() {
             println!("ptr is drop");
+        }
+    }
+    {
+        use sharedptr::Arc::SharedPtr;
+        let mut ptr = SharedPtr::<Foo>::zeroed();
+        ptr.write(Foo("1111".to_string()));
+        if let Ok(foo)= ptr.into_inner(){
+            println!("foo:{}",foo.0);
+            let mut ptr = SharedPtr::<Foo>::zeroed();
+            ptr.write(foo);
+            let ptr2=ptr.clone();
+            if let Err(ptr)=ptr.into_inner(){
+                println!("ptr is not unique:{}",ptr2.0);
+                assert!(ptr.into_or_clone_inner().is_some())
+            }else{
+                panic!("error logic 2")
+            }
+        }else{
+            panic!("error logic 1")
+        }
+    }
+
+    {
+        use sharedptr::Rc::SharedPtr;
+        let mut ptr = SharedPtr::<Foo>::zeroed();
+        ptr.write(Foo("2222".to_string()));
+        if let Ok(foo)= ptr.into_inner(){
+            println!("foo:{}",foo.0);
+            let mut ptr = SharedPtr::<Foo>::zeroed();
+            ptr.write(foo);
+            let ptr2=ptr.clone();
+            if let Err(ptr)=ptr.into_inner(){
+                println!("ptr is not unique:{}",ptr2.0);
+                assert!(ptr.into_or_clone_inner().is_some())
+            }else{
+                panic!("error logic 2")
+            }
+        }else{
+            panic!("error logic 1")
         }
     }
 }
